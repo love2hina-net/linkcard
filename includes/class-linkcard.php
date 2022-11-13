@@ -47,7 +47,7 @@ class Linkcard {
 	 * @access   protected
 	 * @var      string    $plugin_name    The string used to uniquely identify this plugin.
 	 */
-	protected const plugin_name = 'love2hina-linkcard';
+	protected const plugin_name = LINKCARD_UID;
 
 	/**
 	 * The current version of the plugin.
@@ -68,8 +68,8 @@ class Linkcard {
 	 * @since    1.0.0
 	 */
 	public function __construct() {
-		if ( defined( 'LOVE2HINA_LINKCARD_VERSION' ) ) {
-			$this->version = LOVE2HINA_LINKCARD_VERSION;
+		if ( defined( 'LINKCARD_VERSION' ) ) {
+			$this->version = LINKCARD_VERSION;
 		} else {
 			$this->version = '1.0.0';
 		}
