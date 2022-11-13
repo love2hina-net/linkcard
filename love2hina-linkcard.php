@@ -1,4 +1,5 @@
 <?php
+namespace love2hina\wordpress\linkcard;
 
 /**
  * The plugin bootstrap file
@@ -8,21 +9,22 @@
  * registers the activation and deactivation functions, and defines a function
  * that starts the plugin.
  *
- * @link              http://example.com
+ * @link              https://www.love2hina.net/
  * @since             1.0.0
- * @package           Plugin_Name
+ * @package           love2hina_Linkcard
  *
  * @wordpress-plugin
- * Plugin Name:       WordPress Plugin Boilerplate
- * Plugin URI:        http://example.com/plugin-name-uri/
+ * Plugin Name:       love2hina Linkcard
+ * Plugin URI:
  * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
  * Version:           1.0.0
- * Author:            Your Name or Your Company
- * Author URI:        http://example.com/
- * License:           GPL-2.0+
- * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       plugin-name
+ * Author:            webmaster@love2hina.net
+ * Author URI:        https://www.love2hina.net/
+ * License:           GPL-3.0+
+ * License URI:       http://www.gnu.org/licenses/gpl-3.0.txt
+ * Text Domain:       love2hina-linkcard
  * Domain Path:       /languages
+ * Requires PHP:      8.1.12
  */
 
 // If this file is called directly, abort.
@@ -35,34 +37,34 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'PLUGIN_NAME_VERSION', '1.0.0' );
+define( 'LOVE2HINA_LINKCARD_VERSION', '1.0.0' );
 
 /**
  * The code that runs during plugin activation.
- * This action is documented in includes/class-plugin-name-activator.php
+ * This action is documented in includes/class-linkcard-activator.php
  */
-function activate_plugin_name() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-plugin-name-activator.php';
-	Plugin_Name_Activator::activate();
+function activate_linkcard() {
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-linkcard-activator.php';
+	Linkcard_Activator::activate();
 }
 
 /**
  * The code that runs during plugin deactivation.
- * This action is documented in includes/class-plugin-name-deactivator.php
+ * This action is documented in includes/class-linkcard-deactivator.php
  */
-function deactivate_plugin_name() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-plugin-name-deactivator.php';
-	Plugin_Name_Deactivator::deactivate();
+function deactivate_linkcard() {
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-linkcard-deactivator.php';
+	Linkcard_Deactivator::deactivate();
 }
 
-register_activation_hook( __FILE__, 'activate_plugin_name' );
-register_deactivation_hook( __FILE__, 'deactivate_plugin_name' );
+register_activation_hook( __FILE__, 'love2hina\wordpress\linkcard\activate_linkcard' );
+register_deactivation_hook( __FILE__, 'love2hina\wordpress\linkcard\deactivate_linkcard' );
 
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require plugin_dir_path( __FILE__ ) . 'includes/class-plugin-name.php';
+require plugin_dir_path( __FILE__ ) . 'includes/class-linkcard.php';
 
 /**
  * Begins execution of the plugin.
@@ -73,10 +75,10 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-plugin-name.php';
  *
  * @since    1.0.0
  */
-function run_plugin_name() {
+function run_linkcard() {
 
-	$plugin = new Plugin_Name();
+	$plugin = new Linkcard();
 	$plugin->run();
 
 }
-run_plugin_name();
+run_linkcard();

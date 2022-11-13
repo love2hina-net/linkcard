@@ -1,4 +1,5 @@
 <?php
+namespace love2hina\wordpress\linkcard;
 
 /**
  * Define the internationalization functionality
@@ -6,11 +7,11 @@
  * Loads and defines the internationalization files for this plugin
  * so that it is ready for translation.
  *
- * @link       http://example.com
+ * @link       https://www.love2hina.net/
  * @since      1.0.0
  *
- * @package    Plugin_Name
- * @subpackage Plugin_Name/includes
+ * @package    love2hina_Linkcard
+ * @subpackage love2hina_Linkcard/includes
  */
 
 /**
@@ -20,11 +21,11 @@
  * so that it is ready for translation.
  *
  * @since      1.0.0
- * @package    Plugin_Name
- * @subpackage Plugin_Name/includes
- * @author     Your Name <email@example.com>
+ * @package    love2hina_Linkcard
+ * @subpackage love2hina_Linkcard/includes
+ * @author     webmaster@love2hina.net
  */
-class Plugin_Name_i18n {
+class Linkcard_i18n {
 
 
 	/**
@@ -35,13 +36,11 @@ class Plugin_Name_i18n {
 	public function load_plugin_textdomain() {
 
 		load_plugin_textdomain(
-			'plugin-name',
+			'love2hina-linkcard',
 			false,
 			dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
 		);
 
 	}
-
-
 
 }

@@ -1,13 +1,14 @@
 <?php
+namespace love2hina\wordpress\linkcard;
 
 /**
  * Register all actions and filters for the plugin
  *
- * @link       http://example.com
+ * @link       https://www.love2hina.net/
  * @since      1.0.0
  *
- * @package    Plugin_Name
- * @subpackage Plugin_Name/includes
+ * @package    love2hina_Linkcard
+ * @subpackage love2hina_Linkcard/includes
  */
 
 /**
@@ -17,11 +18,11 @@
  * the plugin, and register them with the WordPress API. Call the
  * run function to execute the list of actions and filters.
  *
- * @package    Plugin_Name
- * @subpackage Plugin_Name/includes
- * @author     Your Name <email@example.com>
+ * @package    love2hina_Linkcard
+ * @subpackage love2hina_Linkcard/includes
+ * @author     webmaster@love2hina.net
  */
-class Plugin_Name_Loader {
+class Linkcard_Loader {
 
 	/**
 	 * The array of actions registered with WordPress.

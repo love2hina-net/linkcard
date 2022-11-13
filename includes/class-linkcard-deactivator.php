@@ -1,13 +1,14 @@
 <?php
+namespace love2hina\wordpress\linkcard;
 
 /**
  * Fired during plugin deactivation
  *
- * @link       http://example.com
+ * @link       https://www.love2hina.net/
  * @since      1.0.0
  *
- * @package    Plugin_Name
- * @subpackage Plugin_Name/includes
+ * @package    love2hina_Linkcard
+ * @subpackage love2hina_Linkcard/includes
  */
 
 /**
@@ -16,11 +17,11 @@
  * This class defines all code necessary to run during the plugin's deactivation.
  *
  * @since      1.0.0
- * @package    Plugin_Name
- * @subpackage Plugin_Name/includes
- * @author     Your Name <email@example.com>
+ * @package    love2hina_Linkcard
+ * @subpackage love2hina_Linkcard/includes
+ * @author     webmaster@love2hina.net
  */
-class Plugin_Name_Deactivator {
+class Linkcard_Deactivator {
 
 	/**
 	 * Short Description. (use period)
