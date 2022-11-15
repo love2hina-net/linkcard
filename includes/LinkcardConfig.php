@@ -9,13 +9,13 @@ namespace love2hina\wordpress\linkcard;
  * @subpackage love2hina_Linkcard/includes
  * @author     webmaster@love2hina.net
  */
-class Linkcard_Config
+class LinkcardConfig
 {
     /** 設定値のキー名 */
     const OPTION_KEY = LINKCARD_PREFIX . 'options';
 
     /** 定数展開用 */
-    private readonly functon $_echo;
+    private readonly mixed $_echo;
 
     /** キーが存在するかどうか */
     private bool $is_exists;
@@ -43,19 +43,42 @@ class Linkcard_Config
                 $this->is_exists = true;
             }
             else {
-                trigger_error("creating option {$this->_echo(self::OPTION_KEY)} was failed.", E_USER_WARNING);
+                \trigger_error("creating option {$this->_echo(self::OPTION_KEY)} was failed.", E_USER_WARNING);
             }
         }
         else {
             // 保存する
             if (($result = \update_option(self::OPTION_KEY, $this->values)) !== true) {
-                trigger_error("updating option {$this->_echo(self::OPTION_KEY)} was failed.", E_USER_WARNING);
+                \trigger_error("updating option {$this->_echo(self::OPTION_KEY)} was failed.", E_USER_WARNING);
             }
         }
 
         return $result;
     }
 
-}
+    public function keys(): array
+    {
+        return \array_keys($this->values);
+    }
 
-?>
+    public function __isset(string $name): bool
+    {
+        return \array_key_exists($name, $this->values);
+    }
+
+    public function __unset(string $name): void
+    {
+        unset($this->values[$name]);
+    }
+
+    public function __get(string $name): mixed
+    {
+        return (\array_key_exists($name, $this->values))? $this->values[$name] : null;
+    }
+
+    public function __set(string $name, mixed $value): void
+    {
+        $this->values[$name] = $value;
+    }
+
+}
