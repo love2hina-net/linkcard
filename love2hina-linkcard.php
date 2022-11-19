@@ -73,7 +73,7 @@ register_deactivation_hook( __FILE__, 'love2hina\wordpress\linkcard\deactivate_l
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require plugin_dir_path( __FILE__ ) . 'includes/class-linkcard.php';
+require(plugin_dir_path(__FILE__) . 'includes/Linkcard.php');
 
 /**
  * Begins execution of the plugin.
@@ -86,7 +86,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-linkcard.php';
  */
 function run_linkcard() {
 
-	$plugin = new Linkcard();
+	$plugin = new Linkcard(LINKCARD_UID, LINKCARD_VERSION, LINKCARD_PREFIX);
 	$plugin->run();
 
 }

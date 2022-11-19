@@ -66,10 +66,10 @@ class Linkcard_Public {
 		 * This function is provided for demonstration purposes only.
 		 *
 		 * An instance of this class should be passed to the run() function
-		 * defined in Linkcard_Loader as all of the hooks are defined
+		 * defined in LinkcardLoader as all of the hooks are defined
 		 * in that particular class.
 		 *
-		 * The Linkcard_Loader will then create the relationship
+		 * The LinkcardLoader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
@@ -89,10 +89,10 @@ class Linkcard_Public {
 		 * This function is provided for demonstration purposes only.
 		 *
 		 * An instance of this class should be passed to the run() function
-		 * defined in Linkcard_Loader as all of the hooks are defined
+		 * defined in LinkcardLoader as all of the hooks are defined
 		 * in that particular class.
 		 *
-		 * The Linkcard_Loader will then create the relationship
+		 * The LinkcardLoader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
