@@ -2,20 +2,7 @@
 namespace love2hina\wordpress\linkcard;
 
 /**
- * The file that defines the core plugin class
- *
- * A class definition that includes attributes and functions used across both the
- * public-facing side of the site and the admin area.
- *
- * @link       https://www.love2hina.net/
- * @since      1.0.0
- *
- * @package    love2hina_Linkcard
- * @subpackage love2hina_Linkcard/includes
- */
-
-/**
- * The core plugin class.
+ * プラグイン本体クラス.
  *
  * This is used to define internationalization, admin-specific hooks, and
  * public-facing site hooks.
@@ -106,12 +93,8 @@ class Linkcard
         $this->load_dependencies();
 
         $this->config = new LinkcardConfig();
-        $this->database = new LinkcardDatabase();
+        $this->database = new LinkcardDatabase($this);
         $this->loader = new LinkcardLoader();
-
-        $this->set_locale();
-        $this->define_admin_hooks();
-        $this->define_public_hooks();
     }
 
     /**
@@ -130,10 +113,11 @@ class Linkcard
      * @since    1.0.0
      * @access   private
      */
-    private function load_dependencies()
+    private function load_dependencies(): void
     {
-        //
+        // 設定値アクセス
         require_once(plugin_dir_path(dirname(__FILE__)) . 'includes/LinkcardConfig.php');
+        // DBアクセス
         require_once(plugin_dir_path(dirname(__FILE__)) . 'includes/LinkcardDatabase.php');
 
         /**
@@ -158,6 +142,43 @@ class Linkcard
          * side of the site.
          */
         require_once(plugin_dir_path(dirname( __FILE__ )) . 'public/class-linkcard-public.php');
+    }
+
+    public function activate(): void
+    {
+        $this->initialize();
+    }
+
+    private function initialize(): void
+    {
+        switch ($this->config->schema_id)
+        {
+            case null:
+                // 未作成
+                $this->database->create_table();
+
+                $this->config->schema_id = LinkcardDatabase::DATABASE_SCHEMA_ID;
+                $this->config->apply();
+                break;
+
+            case LinkcardDatabase::DATABASE_SCHEMA_ID:
+                // 初期化済
+                // TODO: 期限切れパージ
+                break;
+
+            default:
+                // 再作成
+                $this->database->drop_table();
+                $this->database->create_table();
+
+                $this->config->schema_id = LinkcardDatabase::DATABASE_SCHEMA_ID;
+                $this->config->apply();
+                break;
+        }
+    }
+
+    public function deactivate(): void
+    {
     }
 
     /**
@@ -214,7 +235,13 @@ class Linkcard
      *
      * @since    1.0.0
      */
-    public function run() {
+    public function run(): void
+    {
+        $this->initialize();
+
+        $this->set_locale();
+        $this->define_admin_hooks();
+        $this->define_public_hooks();
         $this->loader->run();
     }
 
@@ -225,7 +252,8 @@ class Linkcard
      * @since     1.0.0
      * @return    string    The name of the plugin.
      */
-    public function get_plugin_name() {
+    public function get_plugin_name(): string
+    {
         return $this->plugin_name;
     }
 
@@ -235,7 +263,8 @@ class Linkcard
      * @since     1.0.0
      * @return    LinkcardLoader    Orchestrates the hooks of the plugin.
      */
-    public function get_loader() {
+    public function get_loader(): object
+    {
         return $this->loader;
     }
 
@@ -245,7 +274,8 @@ class Linkcard
      * @since     1.0.0
      * @return    string    The version number of the plugin.
      */
-    public function get_version() {
+    public function get_version(): string
+    {
         return $this->version;
     }
 

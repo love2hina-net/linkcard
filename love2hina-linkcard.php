@@ -31,63 +31,45 @@ namespace love2hina\wordpress\linkcard;
  */
 
 // If this file is called directly, abort.
-if ( ! defined( 'WPINC' ) ) {
-	die;
+if (!defined('WPINC')) {
+    die;
 }
 
-/**
- * Currently plugin version.
- * Start at version 1.0.0 and use SemVer - https://semver.org
- * Rename this for your plugin and update it as you release new versions.
- */
+/** プラグインバージョン */
 const LINKCARD_VERSION = '1.0.0';
 
-/** Wordpress plugin id */
+/** プラグインID */
 const LINKCARD_UID = 'love2hina-linkcard';
 
 /** prefix */
 const LINKCARD_PREFIX = 'love2hina_linkcard_';
 
 /**
+ * The core plugin class that is used to define internationalization,
+ * admin-specific hooks, and public-facing site hooks.
+ */
+require(plugin_dir_path(__FILE__) . 'includes/Linkcard.php');
+$plugin = new Linkcard(LINKCARD_UID, LINKCARD_VERSION, LINKCARD_PREFIX);
+
+/**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-linkcard-activator.php
  */
-function activate_linkcard() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-linkcard-activator.php';
-	Linkcard_Activator::activate();
+function activate_linkcard()
+{
+    $plugin->activate();
 }
+register_activation_hook(__FILE__, 'love2hina\wordpress\linkcard\activate_linkcard');
 
 /**
  * The code that runs during plugin deactivation.
  * This action is documented in includes/class-linkcard-deactivator.php
  */
-function deactivate_linkcard() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-linkcard-deactivator.php';
-	Linkcard_Deactivator::deactivate();
+function deactivate_linkcard()
+{
+    $plugin->deactivate();
 }
+register_deactivation_hook(__FILE__, 'love2hina\wordpress\linkcard\deactivate_linkcard');
 
-register_activation_hook( __FILE__, 'love2hina\wordpress\linkcard\activate_linkcard' );
-register_deactivation_hook( __FILE__, 'love2hina\wordpress\linkcard\deactivate_linkcard' );
-
-/**
- * The core plugin class that is used to define internationalization,
- * admin-specific hooks, and public-facing site hooks.
- */
-require(plugin_dir_path(__FILE__) . 'includes/Linkcard.php');
-
-/**
- * Begins execution of the plugin.
- *
- * Since everything within the plugin is registered via hooks,
- * then kicking off the plugin from this point in the file does
- * not affect the page life cycle.
- *
- * @since    1.0.0
- */
-function run_linkcard() {
-
-	$plugin = new Linkcard(LINKCARD_UID, LINKCARD_VERSION, LINKCARD_PREFIX);
-	$plugin->run();
-
-}
-run_linkcard();
+// Begins execution of the plugin.
+$plugin->run();
