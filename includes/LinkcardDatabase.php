@@ -15,10 +15,10 @@ class LinkcardDatabase
     const DATABASE_SCHEMA_ID = '8666c73b-ce75-4659-9adf-f4e9c5985873';
 
     /** プラグイン本体クラス */
-    protected readonly object $plugin;
+    protected readonly object   $plugin;
 
     /** テーブル名 */
-    protected readonly string $table_cache;
+    protected readonly string   $table_cache;
 
     public function __construct(object $plugin)
     {

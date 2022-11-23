@@ -24,7 +24,7 @@ class Linkcard
      * @access  protected
      * @var     LinkcardConfig  $config
      */
-    protected readonly object $config;
+    protected readonly object   $config;
 
     /**
      * DBアクセス.
@@ -33,7 +33,7 @@ class Linkcard
      * @access  protected
      * @var     LinkcardDatabase    $database
      */
-    protected readonly object $database;
+    protected readonly object   $database;
 
     /**
      * The loader that's responsible for maintaining and registering all hooks that power
@@ -50,7 +50,7 @@ class Linkcard
      *
      * @since    1.0.0
      * @access   protected
-     * @var      string $plugin_name
+     * @var      string         $plugin_name
      */
     protected readonly string   $plugin_name;
 
@@ -59,7 +59,7 @@ class Linkcard
      *
      * @since    1.0.0
      * @access   protected
-     * @var      string $version
+     * @var      string         $version
      */
     protected readonly string   $version;
 
@@ -68,7 +68,7 @@ class Linkcard
      *
      * @since    1.0.0
      * @access   protected
-     * @var      string $prefix
+     * @var      string         $prefix
      */
     protected readonly string   $prefix;
 
@@ -104,7 +104,7 @@ class Linkcard
      *
      * - LinkcardLoader. Orchestrates the hooks of the plugin.
      * - Linkcard_i18n. Defines internationalization functionality.
-     * - Linkcard_Admin. Defines all hooks for the admin area.
+     * - LinkcardAdmin. Defines all hooks for the admin area.
      * - Linkcard_Public. Defines all hooks for the public side of the site.
      *
      * Create an instance of the loader which will be used to register the hooks
@@ -135,7 +135,7 @@ class Linkcard
         /**
          * The class responsible for defining all actions that occur in the admin area.
          */
-        require_once(plugin_dir_path(dirname(__FILE__)) . 'admin/class-linkcard-admin.php');
+        require_once(plugin_dir_path(dirname(__FILE__)) . 'admin/LinkcardAdmin.php');
 
         /**
          * The class responsible for defining all actions that occur in the public-facing
@@ -190,12 +190,12 @@ class Linkcard
      * @since    1.0.0
      * @access   private
      */
-    private function set_locale() {
+    private function set_locale()
+    {
 
         $plugin_i18n = new Linkcard_i18n();
 
         $this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
-
     }
 
     /**
@@ -205,13 +205,9 @@ class Linkcard
      * @since    1.0.0
      * @access   private
      */
-    private function define_admin_hooks() {
-
-        $plugin_admin = new Linkcard_Admin( $this->get_plugin_name(), $this->get_version() );
-
-        $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-        $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
-
+    private function define_admin_hooks()
+    {
+        $plugin_admin = new LinkcardAdmin($this);
     }
 
     /**
