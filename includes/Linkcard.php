@@ -92,7 +92,7 @@ class Linkcard
 
         $this->load_dependencies();
 
-        $this->config = new LinkcardConfig();
+        $this->config = new LinkcardConfig($this);
         $this->database = new LinkcardDatabase($this);
         $this->loader = new LinkcardLoader();
     }
@@ -251,6 +251,11 @@ class Linkcard
     public function get_plugin_name(): string
     {
         return $this->plugin_name;
+    }
+
+    public function get_config(): object
+    {
+        return $this->config;
     }
 
     /**

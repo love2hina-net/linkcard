@@ -12,25 +12,27 @@ namespace love2hina\wordpress\linkcard;
 class LinkcardConfig
 {
     /** 設定値のキー名 */
-    const OPTION_KEY = LINKCARD_PREFIX . 'options';
-
-    /** 定数展開用 */
-    private readonly mixed $_echo;
+    private readonly string $option_key;
 
     /** キーが存在するかどうか */
-    private bool $is_exists;
+    private bool    $is_exists;
 
     /** 設定値 */
-    private array $values;
+    private array   $values;
 
-    public function __construct()
+    public function __construct(object $plugin)
     {
+        $this->option_key = $plugin->get_prefix() . 'options';
+
         // 取得する
-        $values = \get_option(self::OPTION_KEY, false);
+        $values = \get_option($this->option_key, false);
         $this->is_exists = ($values !== false);
         $this->values = ($this->is_exists)? $values : array();
+    }
 
-        $this->_echo = fn(string $value): string => $value;
+    public function get_option_key(): string
+    {
+        return $this->option_key;
     }
 
     public function apply(): bool
@@ -39,17 +41,17 @@ class LinkcardConfig
 
         if (!$this->is_exists) {
             // 存在しない場合、作成する
-            if (($result = \add_option(self::OPTION_KEY, $this->values)) === true) {
+            if (($result = \add_option($this->option_key, $this->values)) === true) {
                 $this->is_exists = true;
             }
             else {
-                \trigger_error("creating option {$this->_echo(self::OPTION_KEY)} was failed.", E_USER_WARNING);
+                \trigger_error("creating option {$this->option_key} was failed.", E_USER_WARNING);
             }
         }
         else {
             // 保存する
-            if (($result = \update_option(self::OPTION_KEY, $this->values)) !== true) {
-                \trigger_error("updating option {$this->_echo(self::OPTION_KEY)} was failed.", E_USER_WARNING);
+            if (($result = \update_option($this->option_key, $this->values)) !== true) {
+                \trigger_error("updating option {$this->option_key} was failed.", E_USER_WARNING);
             }
         }
 

@@ -31,20 +31,25 @@ class LinkcardAdmin
         $this->plugin->get_loader()->add_action('admin_menu', $this, 'admin_menu');
     }
 
+    protected function get_option_key(): string
+    {
+        return $this->plugin->get_config()->get_option_key();
+    }
+
     public function admin_init(): void
     {
-        \register_setting( 'wporg', 'wporg_options' );
+        \register_setting($this->plugin->get_plugin_name(), $this->get_option_key());
         \add_settings_section(
             'wporg_section_developers',
             __( 'The Matrix has you.', 'wporg' ),
             [$this, 'wporg_section_developers_callback'],
-            'wporg'
+            $this->plugin->get_plugin_name()
         );
         \add_settings_field(
             'wporg_field_pill',
             __( 'Pill', 'wporg' ),
             [$this, 'wporg_field_pill_cb'],
-            'wporg',
+            $this->plugin->get_plugin_name(),
             'wporg_section_developers',
             array(
                 'label_for'         => 'wporg_field_pill',
@@ -64,12 +69,12 @@ class LinkcardAdmin
     public function wporg_field_pill_cb( $args )
     {
         // Get the value of the setting we've registered with register_setting()
-        $options = get_option( 'wporg_options' );
+        $options = get_option($this->get_option_key());
         ?>
         <select
                 id="<?php echo esc_attr( $args['label_for'] ); ?>"
                 data-custom="<?php echo esc_attr( $args['wporg_custom_data'] ); ?>"
-                name="wporg_options[<?php echo esc_attr( $args['label_for'] ); ?>]">
+                name="<?php echo $this->get_option_key(); ?>[<?php echo esc_attr( $args['label_for'] ); ?>]">
             <option value="red" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], 'red', false ) ) : ( '' ); ?>>
                 <?php esc_html_e( 'red pill', 'wporg' ); ?>
             </option>
@@ -128,12 +133,8 @@ class LinkcardAdmin
             <h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
             <form action="options.php" method="post">
                 <?php
-                // output security fields for the registered setting "wporg"
-                settings_fields( 'wporg' );
-                // output setting sections and their fields
-                // (sections are registered for "wporg", each field is registered to a specific section)
-                do_settings_sections( 'wporg' );
-                // output save settings button
+                settings_fields( $this->plugin->get_plugin_name() );
+                do_settings_sections( $this->plugin->get_plugin_name() );
                 submit_button( 'Save Settings' );
                 ?>
             </form>
