@@ -50,9 +50,9 @@ class Linkcard
      *
      * @since    1.0.0
      * @access   protected
-     * @var      string         $plugin_name
+     * @var      string         $name
      */
-    protected readonly string   $plugin_name;
+    protected readonly string   $name;
 
     /**
      * The current version of the plugin.
@@ -80,13 +80,13 @@ class Linkcard
      * the public-facing side of the site.
      *
      * @since   1.0.0
-     * @param   string  $plugin_name
+     * @param   string  $name
      * @param   string  $version
      * @param   string  $prefix
      */
-    public function __construct(string $plugin_name, string $version, string $prefix)
+    public function __construct(string $name, string $version, string $prefix)
     {
-        $this->plugin_name = $plugin_name;
+        $this->name = $name;
         $this->version = $version;
         $this->prefix = $prefix;
 
@@ -103,7 +103,7 @@ class Linkcard
      * Include the following files that make up the plugin:
      *
      * - LinkcardLoader. Orchestrates the hooks of the plugin.
-     * - Linkcard_i18n. Defines internationalization functionality.
+     * - Linkcardi18n. Defines internationalization functionality.
      * - LinkcardAdmin. Defines all hooks for the admin area.
      * - Linkcard_Public. Defines all hooks for the public side of the site.
      *
@@ -115,6 +115,9 @@ class Linkcard
      */
     private function load_dependencies(): void
     {
+        // ローカライゼーション
+        require_once(plugin_dir_path(dirname(__FILE__)) . 'includes/Linkcardi18n.php');
+
         // 設定値アクセス
         require_once(plugin_dir_path(dirname(__FILE__)) . 'includes/LinkcardConfig.php');
         // DBアクセス
@@ -125,12 +128,6 @@ class Linkcard
          * core plugin.
          */
         require_once(plugin_dir_path(dirname(__FILE__)) . 'includes/LinkcardLoader.php');
-
-        /**
-         * The class responsible for defining internationalization functionality
-         * of the plugin.
-         */
-        require_once(plugin_dir_path(dirname(__FILE__)) . 'includes/class-linkcard-i18n.php');
 
         /**
          * The class responsible for defining all actions that occur in the admin area.
@@ -184,7 +181,7 @@ class Linkcard
     /**
      * Define the locale for this plugin for internationalization.
      *
-     * Uses the Linkcard_i18n class in order to set the domain and to register the hook
+     * Uses the Linkcardi18n class in order to set the domain and to register the hook
      * with WordPress.
      *
      * @since    1.0.0
@@ -192,10 +189,9 @@ class Linkcard
      */
     private function set_locale()
     {
+        $plugin_i18n = new Linkcardi18n($this);
 
-        $plugin_i18n = new Linkcard_i18n();
-
-        $this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
+        $this->loader->add_action('plugins_loaded', $plugin_i18n, 'load_plugin_textdomain');
     }
 
     /**
@@ -219,7 +215,7 @@ class Linkcard
      */
     private function define_public_hooks() {
 
-        $plugin_public = new Linkcard_Public( $this->get_plugin_name(), $this->get_version() );
+        $plugin_public = new Linkcard_Public( $this->get_name(), $this->get_version() );
 
         $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
         $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
@@ -233,9 +229,10 @@ class Linkcard
      */
     public function run(): void
     {
+        $this->set_locale();
+
         $this->initialize();
 
-        $this->set_locale();
         $this->define_admin_hooks();
         $this->define_public_hooks();
         $this->loader->run();
@@ -248,9 +245,9 @@ class Linkcard
      * @since     1.0.0
      * @return    string    The name of the plugin.
      */
-    public function get_plugin_name(): string
+    public function get_name(): string
     {
-        return $this->plugin_name;
+        return $this->name;
     }
 
     public function get_config(): object

@@ -20,10 +20,14 @@ class LinkcardAdmin
     /** メニューSLUG */
     protected readonly string   $menu_slug;
 
+    /** オプショングループ名 */
+    protected readonly string   $option_group;
+
     public function __construct(object $plugin)
     {
         $this->plugin = $plugin;
         $this->menu_slug = $this->plugin->get_prefix() . 'settings';
+        $this->option_group = $this->plugin->get_name();
 
         $this->plugin->get_loader()->add_action('admin_enqueue_scripts', $this, 'enqueue_styles');
         $this->plugin->get_loader()->add_action('admin_enqueue_scripts', $this, 'enqueue_scripts');
@@ -31,76 +35,22 @@ class LinkcardAdmin
         $this->plugin->get_loader()->add_action('admin_menu', $this, 'admin_menu');
     }
 
-    protected function get_option_key(): string
-    {
-        return $this->plugin->get_config()->get_option_key();
-    }
-
     public function admin_init(): void
     {
-        \register_setting($this->plugin->get_plugin_name(), $this->get_option_key());
-        \add_settings_section(
-            'wporg_section_developers',
-            __( 'The Matrix has you.', 'wporg' ),
-            [$this, 'wporg_section_developers_callback'],
-            $this->plugin->get_plugin_name()
-        );
-        \add_settings_field(
-            'wporg_field_pill',
-            __( 'Pill', 'wporg' ),
-            [$this, 'wporg_field_pill_cb'],
-            $this->plugin->get_plugin_name(),
-            'wporg_section_developers',
-            array(
-                'label_for'         => 'wporg_field_pill',
-                'class'             => 'wporg_row',
-                'wporg_custom_data' => 'custom',
-            )
-        );
+        $this->plugin->get_config()->admin_register_settings([
+            'option_group' => $this->option_group,
+            'section_callback_func' => [$this, 'option_section_callback']
+        ]);
     }
 
-    public function wporg_section_developers_callback( $args ): void
+    public function option_section_callback(array $args): void
     {
-        ?>
-        <p id="<?php echo esc_attr( $args['id'] ); ?>"><?php esc_html_e( 'Follow the white rabbit.', 'wporg' ); ?></p>
-        <?php
-    }
-
-    public function wporg_field_pill_cb( $args )
-    {
-        // Get the value of the setting we've registered with register_setting()
-        $options = get_option($this->get_option_key());
-        ?>
-        <select
-                id="<?php echo esc_attr( $args['label_for'] ); ?>"
-                data-custom="<?php echo esc_attr( $args['wporg_custom_data'] ); ?>"
-                name="<?php echo $this->get_option_key(); ?>[<?php echo esc_attr( $args['label_for'] ); ?>]">
-            <option value="red" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], 'red', false ) ) : ( '' ); ?>>
-                <?php esc_html_e( 'red pill', 'wporg' ); ?>
-            </option>
-            <option value="blue" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], 'blue', false ) ) : ( '' ); ?>>
-                <?php esc_html_e( 'blue pill', 'wporg' ); ?>
-            </option>
-        </select>
-        <p class="description">
-            <?php esc_html_e( 'You take the blue pill and the story ends. You wake in your bed and you believe whatever you want to believe.', 'wporg' ); ?>
-        </p>
-        <p class="description">
-            <?php esc_html_e( 'You take the red pill and you stay in Wonderland and I show you how deep the rabbit-hole goes.', 'wporg' ); ?>
-        </p>
-        <?php
-    }
-
-    public function setting_field_callback(array $args): void
-    {
-        echo '<input id="cache_lifetime" name="cache_lifetime[cache_lifetime]" type="number" value="';
-        \form_option('cache_lifetime');
-        echo '" />' . "\n";
+        echo '<p id="' . esc_attr($args['id']) . '">' . esc_html__('Follow the white rabbit.', 'wporg') . '</p>';
     }
 
     public function admin_menu(string $context): void
     {
-        $pagename = 'LinkCard Settings'; // __( '[HCB] Settings', 'loos-hcb' );
+        $pagename = __('LinkCard Settings');
         \add_options_page(
             $pagename,
             $pagename,
@@ -123,7 +73,7 @@ class LinkcardAdmin
         // WordPress will add the "settings-updated" $_GET parameter to the url
         if ( isset( $_GET['settings-updated'] ) ) {
             // add settings saved message with the class of "updated"
-            add_settings_error( 'wporg_messages', 'wporg_message', __( 'Settings Saved', 'wporg' ), 'updated' );
+            add_settings_error( 'wporg_messages', 'wporg_message', __('Settings Saved'), 'updated' );
         }
 
         // show error/update messages
@@ -133,8 +83,8 @@ class LinkcardAdmin
             <h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
             <form action="options.php" method="post">
                 <?php
-                settings_fields( $this->plugin->get_plugin_name() );
-                do_settings_sections( $this->plugin->get_plugin_name() );
+                settings_fields( $this->option_group );
+                do_settings_sections( $this->option_group );
                 submit_button( 'Save Settings' );
                 ?>
             </form>
@@ -162,7 +112,7 @@ class LinkcardAdmin
          * class.
          */
 
-        wp_enqueue_style($this->plugin->get_plugin_name(), plugin_dir_url(__FILE__) . 'css/linkcard-admin.css', array(), $this->plugin->get_version(), 'all');
+        wp_enqueue_style($this->plugin->get_name(), plugin_dir_url(__FILE__) . 'css/linkcard-admin.css', array(), $this->plugin->get_version(), 'all');
 
     }
 
@@ -186,7 +136,7 @@ class LinkcardAdmin
          * class.
          */
 
-        wp_enqueue_script($this->plugin->get_plugin_name(), plugin_dir_url(__FILE__) . 'js/linkcard-admin.js', array('jquery'), $this->plugin->get_version(), false);
+        wp_enqueue_script($this->plugin->get_name(), plugin_dir_url(__FILE__) . 'js/linkcard-admin.js', array('jquery'), $this->plugin->get_version(), false);
 
     }
 
