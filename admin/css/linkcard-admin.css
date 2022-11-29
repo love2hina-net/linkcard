@@ -1,4 +1,11 @@
-/**
- * All of the CSS for your admin-specific functionality should be
- * included in this file.
- */
+@charset "utf-8";
+
+form.love2hina_linkcard_settings table.form-table th
+{
+    padding: 0;
+}
+
+form.love2hina_linkcard_settings table.form-table td
+{
+    padding: 0;
+}

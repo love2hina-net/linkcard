@@ -160,7 +160,8 @@ class Linkcard
 
             case LinkcardDatabase::DATABASE_SCHEMA_ID:
                 // 初期化済
-                // TODO: 期限切れパージ
+                // 期限切れキャッシュの削除
+                $this->database->truncate_cache($this->config->cache_lifetime);
                 break;
 
             default:

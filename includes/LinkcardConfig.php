@@ -112,12 +112,14 @@ class LinkcardConfig
         $args = \wp_parse_args($args, [
             'option_group' => $this->plugin->get_name(),
             'section_callback_func' => null,
-            'section_callback_args' => array()
+            'section_callback_args' => array(),
+            'field_callback_func' => [$this, 'field_callback_default'],
+            'field_callback_args' => array()
         ]);
 
         \register_setting($args['option_group'], $this->option_key);
         \add_settings_section(
-            'wporg_section_developers',
+            'general_section',
             __('The Matrix has you.'),
             $args['section_callback_func'],
             $args['option_group'],
@@ -127,24 +129,29 @@ class LinkcardConfig
             \add_settings_field(
                 $key,
                 __($schema['title']),
-                [$this, 'wporg_field_pill_cb'],
+                $args['field_callback_func'],
                 $args['option_group'],
-                'wporg_section_developers',
-                ($schema + ['id' => $key])
+                'general_section',
+                \array_merge($schema, $args['field_callback_args'], [
+                    'id' => $key,
+                    'name' => "{$this->option_key}[{$key}]",
+                    'value' => $this->values[$key],
+                    'field_callback' => [$this, 'field_callback_default']
+                ])
             );
         }
     }
 
-    public function wporg_field_pill_cb(array $args): void
+    public function field_callback_default(array $args): void
     {
         //
         switch ($args['type'])
         {
             case 'hidden':
-                echo "<input id=\"{$args['id']}\" name=\"{$this->option_key}[{$args['id']}]\" type=\"hidden\" value=\"{$this->values[$args['id']]}\" />\n";
+                echo "<input id=\"{$args['id']}\" name=\"{$args['name']}\" type=\"hidden\" value=\"{$args['value']}\" />\n";
                 break;
             case 'number':
-                echo "<input id=\"{$args['id']}\" name=\"{$this->option_key}[{$args['id']}]\" type=\"number\" value=\"{$this->values[$args['id']]}\" />\n";
+                echo "<input id=\"{$args['id']}\" name=\"{$args['name']}\" type=\"number\" value=\"{$args['value']}\" />\n";
                 break;
         }
     }

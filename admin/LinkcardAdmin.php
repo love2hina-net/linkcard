@@ -56,14 +56,14 @@ class LinkcardAdmin
             $pagename,
             'manage_options',
             $this->menu_slug,
-            [$this, 'settings_callback']
+            [$this, 'options_callback']
         );
     }
 
-    public function settings_callback(): void
+    public function options_callback(): void
     {
         // check user capabilities
-        if ( ! current_user_can( 'manage_options' ) ) {
+        if (!\current_user_can('manage_options')) {
             return;
         }
 
@@ -71,25 +71,27 @@ class LinkcardAdmin
 
         // check if the user have submitted the settings
         // WordPress will add the "settings-updated" $_GET parameter to the url
-        if ( isset( $_GET['settings-updated'] ) ) {
+        if (isset($_GET['settings-updated'])) {
             // add settings saved message with the class of "updated"
-            add_settings_error( 'wporg_messages', 'wporg_message', __('Settings Saved'), 'updated' );
+            // \add_settings_error('wporg_messages', 'wporg_message', __('Settings Saved'), 'updated');
         }
 
         // show error/update messages
-        settings_errors( 'wporg_messages' );
-        ?>
-        <div class="wrap">
-            <h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
-            <form action="options.php" method="post">
-                <?php
-                settings_fields( $this->option_group );
-                do_settings_sections( $this->option_group );
-                submit_button( 'Save Settings' );
-                ?>
-            </form>
-        </div>
-        <?php
+        \settings_errors('wporg_messages');
+
+        $title = \esc_html(\get_admin_page_title());
+        echo <<< "HEADER"
+            <div class="wrap">
+                <h1>{$title}</h1>
+                <form class="{$this->menu_slug}" action="options.php" method="post">
+            HEADER;
+        \settings_fields($this->option_group);
+        \do_settings_sections($this->option_group);
+        \submit_button();
+        echo <<< "FOOTER"
+                </form>
+            </div>
+            FOOTER;
     }
 
     /**
