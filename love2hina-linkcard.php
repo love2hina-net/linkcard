@@ -9,7 +9,6 @@ namespace love2hina\wordpress\linkcard;
  * registers the activation and deactivation functions, and defines a function
  * that starts the plugin.
  *
- * @since             1.0.0
  * @package           love2hina_Linkcard
  * @author		  	  webmaster@love2hina.net
  * @copyright         Copyright (C) 2022 webmaster@love2hina.net
@@ -35,41 +34,19 @@ if (!defined('WPINC')) {
     die;
 }
 
-/** プラグインバージョン */
-const LINKCARD_VERSION = '1.0.0';
-
-/** プラグインID */
-const LINKCARD_UID = 'love2hina-linkcard';
-
-/** prefix */
-const LINKCARD_PREFIX = 'love2hina_linkcard_';
-
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
 require(plugin_dir_path(__FILE__) . 'includes/Linkcard.php');
-$plugin = new Linkcard(LINKCARD_UID, LINKCARD_VERSION, LINKCARD_PREFIX);
+$plugin = new Linkcard(
+    'love2hina-linkcard',   // プラグインID
+    '1.0.0',                // プラグインバージョン
+    'love2hina_linkcard_'   // prefix
+);
 
-/**
- * The code that runs during plugin activation.
- * This action is documented in includes/class-linkcard-activator.php
- */
-function activate_linkcard()
-{
-    $plugin->activate();
-}
-register_activation_hook(__FILE__, 'love2hina\wordpress\linkcard\activate_linkcard');
-
-/**
- * The code that runs during plugin deactivation.
- * This action is documented in includes/class-linkcard-deactivator.php
- */
-function deactivate_linkcard()
-{
-    $plugin->deactivate();
-}
-register_deactivation_hook(__FILE__, 'love2hina\wordpress\linkcard\deactivate_linkcard');
+\register_activation_hook(__FILE__, [$plugin, 'activate']);
+\register_deactivation_hook(__FILE__, [$plugin, 'deactivate']);
 
 // Begins execution of the plugin.
 $plugin->run();

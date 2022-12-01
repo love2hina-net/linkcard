@@ -4,7 +4,6 @@ namespace love2hina\wordpress\linkcard;
 /**
  * DBアクセスヘルパークラス.
  *
- * @since      1.0.0
  * @package    love2hina_Linkcard
  * @subpackage love2hina_Linkcard/includes
  * @author     webmaster@love2hina.net
@@ -14,10 +13,20 @@ class LinkcardDatabase
     /** スキーマID */
     const DATABASE_SCHEMA_ID = '8666c73b-ce75-4659-9adf-f4e9c5985873';
 
-    /** プラグイン本体クラス */
+    /**
+     * プラグイン本体クラス.
+     *
+     * @access  protected
+     * @var     Linkcard    $plugin
+     */
     protected readonly object   $plugin;
 
-    /** テーブル名 */
+    /**
+     * テーブル名.
+
+     * @access  protected
+     * @var     string      $table_cache
+     */
     protected readonly string   $table_cache;
 
     public function __construct(object $plugin)
@@ -25,7 +34,7 @@ class LinkcardDatabase
         global $wpdb;
 
         $this->plugin = $plugin;
-        $this->table_cache = "{$wpdb->base_prefix}{$plugin->get_prefix()}OpenGraphCache";
+        $this->table_cache = "{$wpdb->base_prefix}{$plugin->prefix}OpenGraphCache";
     }
 
     public function create_table(): void
@@ -33,7 +42,7 @@ class LinkcardDatabase
         global $wpdb;
 
         $charset_collate = $wpdb->get_charset_collate();
-        $result = $wpdb->query(<<<"EOF"
+        $result = $wpdb->query(<<<"SQL"
             CREATE TABLE {$this->table_cache} (
                 id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
                 creation_time TIMESTAMP NOT NULL,
@@ -45,7 +54,7 @@ class LinkcardDatabase
                 INDEX url (url),
                 INDEX creation_time (creation_time ASC)
             ) $charset_collate
-            EOF
+            SQL
         );
         if ($result !== true) {
             \trigger_error("Create a table was failed. table: {$this->table_cache}", E_USER_ERROR);
@@ -66,10 +75,10 @@ class LinkcardDatabase
     {
         global $wpdb;
 
-        $result = $wpdb->query(<<<"EOF"
+        $result = $wpdb->query(<<<"SQL"
             DELETE FROM {$this->table_cache}
             WHERE ADDDATE(creation_time, INTERVAL {$days} DAY) < NOW()
-            EOF
+            SQL
         );
         if ($result === false) {
             \trigger_error("Delete caches was failed. table: {$this->table_cache}", E_USER_ERROR);
@@ -88,15 +97,46 @@ class LinkcardDatabase
                 ORDER BY creation_time DESC
                 LIMIT 1
                 SQL,
-                $url
+                [$url]
             ),
             \ARRAY_A
         );
     }
 
-    public function insert_cache(): void
+    public function insert_cache(array $data): void
     {
+        global $wpdb;
 
+        $result = $wpdb->query(
+            $wpdb->prepare(<<<"SQL"
+                INSERT INTO {$this->table_cache} (
+                    creation_time,
+                    url,
+                    title,
+                    description,
+                    image,
+                    site)
+                VALUES (
+                    NOW(),
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s
+                )
+                SQL,
+                [
+                    $data['url'],
+                    $data['title'],
+                    $data['description'],
+                    $data['image'],
+                    $data['site']
+                ]
+            )
+        );
+        if ($result === false) {
+            \trigger_error("Add caches was failed. table: {$this->table_cache}", E_USER_ERROR);
+        }
     }
 
 }

@@ -14,7 +14,12 @@ namespace love2hina\wordpress\linkcard;
 class LinkcardAdmin
 {
 
-    /** プラグイン本体クラス */
+    /**
+     * プラグイン本体クラス.
+     *
+     * @access  protected
+     * @var     Linkcard    $plugin
+     */
     protected readonly object   $plugin;
 
     /** メニューSLUG */
@@ -26,18 +31,18 @@ class LinkcardAdmin
     public function __construct(object $plugin)
     {
         $this->plugin = $plugin;
-        $this->menu_slug = $this->plugin->get_prefix() . 'settings';
-        $this->option_group = $this->plugin->get_name();
+        $this->menu_slug = $this->plugin->prefix . 'settings';
+        $this->option_group = $this->plugin->name;
 
-        $this->plugin->get_loader()->add_action('admin_enqueue_scripts', $this, 'enqueue_styles');
-        $this->plugin->get_loader()->add_action('admin_enqueue_scripts', $this, 'enqueue_scripts');
-        $this->plugin->get_loader()->add_action('admin_init', $this, 'admin_init');
-        $this->plugin->get_loader()->add_action('admin_menu', $this, 'admin_menu');
+        $this->plugin->loader->add_action('admin_enqueue_scripts', $this, 'enqueue_styles');
+        $this->plugin->loader->add_action('admin_enqueue_scripts', $this, 'enqueue_scripts');
+        $this->plugin->loader->add_action('admin_init', $this, 'admin_init');
+        $this->plugin->loader->add_action('admin_menu', $this, 'admin_menu');
     }
 
     public function admin_init(): void
     {
-        $this->plugin->get_config()->admin_register_settings([
+        $this->plugin->config->admin_register_settings([
             'option_group' => $this->option_group,
             'section_callback_func' => [$this, 'option_section_callback']
         ]);
@@ -96,8 +101,6 @@ class LinkcardAdmin
 
     /**
      * Register the stylesheets for the admin area.
-     *
-     * @since    1.0.0
      */
     public function enqueue_styles(): void
     {
@@ -114,14 +117,12 @@ class LinkcardAdmin
          * class.
          */
 
-        wp_enqueue_style($this->plugin->get_name(), plugin_dir_url(__FILE__) . 'css/linkcard-admin.css', array(), $this->plugin->get_version(), 'all');
+        \wp_enqueue_style($this->plugin->name, plugin_dir_url(__FILE__) . 'css/linkcard-admin.css', array(), $this->plugin->version, 'all');
 
     }
 
     /**
      * Register the JavaScript for the admin area.
-     *
-     * @since    1.0.0
      */
     public function enqueue_scripts(): void
     {
@@ -138,7 +139,7 @@ class LinkcardAdmin
          * class.
          */
 
-        wp_enqueue_script($this->plugin->get_name(), plugin_dir_url(__FILE__) . 'js/linkcard-admin.js', array('jquery'), $this->plugin->get_version(), false);
+        \wp_enqueue_script($this->plugin->name, plugin_dir_url(__FILE__) . 'js/linkcard-admin.js', array('jquery'), $this->plugin->version, false);
 
     }
 

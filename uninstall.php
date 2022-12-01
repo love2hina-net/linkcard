@@ -21,7 +21,6 @@ namespace love2hina\wordpress\linkcard;
  * https://github.com/tommcfarlin/WordPress-Plugin-Boilerplate/pull/123#issuecomment-28541913
  *
  * @link       https://www.love2hina.net/
- * @since      1.0.0
  * @package    love2hina_Linkcard
  */
 

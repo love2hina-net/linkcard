@@ -25,7 +25,6 @@ function __(string $text): string
  * Loads and defines the internationalization files for this plugin
  * so that it is ready for translation.
  *
- * @since      1.0.0
  * @package    love2hina_Linkcard
  * @subpackage love2hina_Linkcard/includes
  * @author     webmaster@love2hina.net
@@ -38,13 +37,13 @@ class Linkcardi18n
 
     public function __construct(object $plugin)
     {
-        $this->domain = $plugin->get_name();
+        $this->domain = $plugin->name;
+
+        $plugin->loader->add_action('plugins_loaded', $this, 'load_plugin_textdomain');
     }
 
     /**
      * Load the plugin text domain for translation.
-     *
-     * @since    1.0.0
      */
     public function load_plugin_textdomain(): void
     {

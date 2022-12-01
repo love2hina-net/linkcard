@@ -1,11 +1,6 @@
 <?php declare(strict_types=1);
 namespace love2hina\wordpress\linkcard;
 
-// TODO:
-const LINKCARD_VERSION = '1.0.0';
-const LINKCARD_UID = 'love2hina-linkcard';
-const LINKCARD_PREFIX = 'love2hina_linkcard_';
-
 require_once(dirname(__FILE__) . '/WordPressMock.php');
 require_once(dirname(__FILE__) . '/LinkcardConfig.php');
 

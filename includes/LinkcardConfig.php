@@ -4,7 +4,6 @@ namespace love2hina\wordpress\linkcard;
 /**
  * 設定値ヘルパークラス.
  *
- * @since      1.0.0
  * @package    love2hina_Linkcard
  * @subpackage love2hina_Linkcard/includes
  * @author     webmaster@love2hina.net
@@ -40,7 +39,7 @@ class LinkcardConfig
     public function __construct(object $plugin)
     {
         $this->plugin = $plugin;
-        $this->option_key = $plugin->get_prefix() . 'options';
+        $this->option_key = $plugin->prefix . 'options';
 
         // 取得する
         $values = \get_option($this->option_key, false);
@@ -110,7 +109,7 @@ class LinkcardConfig
     public function admin_register_settings(array $args = array()): void
     {
         $args = \wp_parse_args($args, [
-            'option_group' => $this->plugin->get_name(),
+            'option_group' => $this->plugin->name,
             'section_callback_func' => null,
             'section_callback_args' => array(),
             'field_callback_func' => [$this, 'field_callback_default'],
