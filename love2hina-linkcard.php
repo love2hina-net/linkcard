@@ -34,19 +34,15 @@ if (!defined('WPINC')) {
     die;
 }
 
-/**
- * The core plugin class that is used to define internationalization,
- * admin-specific hooks, and public-facing site hooks.
- */
-require(plugin_dir_path(__FILE__) . 'includes/Linkcard.php');
+require_once \plugin_dir_path(__FILE__) . 'includes/Linkcard.php';
 $plugin = new Linkcard(
     'love2hina-linkcard',   // プラグインID
     '1.0.0',                // プラグインバージョン
-    'love2hina_linkcard_'   // prefix
+    'love2hina_linkcard_',  // prefix
+    __FILE__                // このファイル名
 );
 
 \register_activation_hook(__FILE__, [$plugin, 'activate']);
 \register_deactivation_hook(__FILE__, [$plugin, 'deactivate']);
 
-// Begins execution of the plugin.
 $plugin->run();

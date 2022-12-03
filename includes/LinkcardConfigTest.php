@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 namespace love2hina\wordpress\linkcard;
 
-require_once(dirname(__FILE__) . '/WordPressMock.php');
-require_once(dirname(__FILE__) . '/LinkcardConfig.php');
+require_once dirname(__FILE__) . '/WordPressMock.php';
+require_once dirname(__FILE__) . '/LinkcardConfig.php';
 
 final class LinkcardConfigTest extends \PHPUnit\Framework\TestCase
 {

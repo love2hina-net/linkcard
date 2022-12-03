@@ -25,7 +25,7 @@ class LinkcardConfig
     ];
 
     /** プラグイン本体クラス */
-    protected readonly object   $plugin;
+    protected readonly Linkcard $plugin;
 
     /** 設定値のキー名 */
     protected readonly string   $option_key;
@@ -36,7 +36,7 @@ class LinkcardConfig
     /** 設定値 */
     protected array $values;
 
-    public function __construct(object $plugin)
+    public function __construct(Linkcard $plugin)
     {
         $this->plugin = $plugin;
         $this->option_key = $plugin->prefix . 'options';

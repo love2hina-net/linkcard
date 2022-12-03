@@ -65,6 +65,14 @@ class Linkcard
     public readonly string  $prefix;
 
     /**
+     * ディレクトリパス.
+     *
+     * @access  public
+     * @var     string      $dir_path
+     */
+    public readonly string  $dir_path;
+
+    /**
      * Define the core functionality of the plugin.
      *
      * Set the plugin name and the plugin version that can be used throughout the plugin.
@@ -74,18 +82,31 @@ class Linkcard
      * @param   string  $name
      * @param   string  $version
      * @param   string  $prefix
+     * @param   string  $basefile
      */
-    public function __construct(string $name, string $version, string $prefix)
+    public function __construct(string $name, string $version, string $prefix, string $basefile)
     {
         $this->name = $name;
         $this->version = $version;
         $this->prefix = $prefix;
+        $this->dir_path = \plugin_dir_path($basefile);
 
         $this->load_dependencies();
 
         $this->config = new LinkcardConfig($this);
         $this->database = new LinkcardDatabase($this);
         $this->loader = new LinkcardLoader();
+    }
+
+    public function load_module(string $file, bool $once = true): mixed
+    {
+        $fullpath = $this->dir_path . $file;
+        if ($once) {
+            return require_once $fullpath;
+        }
+        else {
+            return require $fullpath;
+        }
     }
 
     /**
@@ -106,29 +127,28 @@ class Linkcard
     private function load_dependencies(): void
     {
         // ローカライゼーション
-        require_once(plugin_dir_path(dirname(__FILE__)) . 'includes/Linkcardi18n.php');
-
+        $this->load_module('includes/Linkcardi18n.php');
         // 設定値アクセス
-        require_once(plugin_dir_path(dirname(__FILE__)) . 'includes/LinkcardConfig.php');
+        $this->load_module('includes/LinkcardConfig.php');
         // DBアクセス
-        require_once(plugin_dir_path(dirname(__FILE__)) . 'includes/LinkcardDatabase.php');
+        $this->load_module('includes/LinkcardDatabase.php');
 
         /**
          * The class responsible for orchestrating the actions and filters of the
          * core plugin.
          */
-        require_once(plugin_dir_path(dirname(__FILE__)) . 'includes/LinkcardLoader.php');
+        $this->load_module('includes/LinkcardLoader.php');
 
         /**
          * The class responsible for defining all actions that occur in the admin area.
          */
-        require_once(plugin_dir_path(dirname(__FILE__)) . 'admin/LinkcardAdmin.php');
+        $this->load_module('admin/LinkcardAdmin.php');
 
         /**
          * The class responsible for defining all actions that occur in the public-facing
          * side of the site.
          */
-        require_once(plugin_dir_path(dirname( __FILE__ )) . 'public/LinkcardPublic.php');
+        $this->load_module('public/LinkcardPublic.php');
     }
 
     public function activate(): void

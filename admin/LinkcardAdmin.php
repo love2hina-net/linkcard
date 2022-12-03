@@ -20,7 +20,7 @@ class LinkcardAdmin
      * @access  protected
      * @var     Linkcard    $plugin
      */
-    protected readonly object   $plugin;
+    protected readonly Linkcard $plugin;
 
     /** メニューSLUG */
     protected readonly string   $menu_slug;
@@ -28,7 +28,7 @@ class LinkcardAdmin
     /** オプショングループ名 */
     protected readonly string   $option_group;
 
-    public function __construct(object $plugin)
+    public function __construct(Linkcard $plugin)
     {
         $this->plugin = $plugin;
         $this->menu_slug = $this->plugin->prefix . 'settings';

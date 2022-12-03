@@ -35,7 +35,7 @@ class Linkcardi18n
     /** ドメイン */
     protected readonly string   $domain;
 
-    public function __construct(object $plugin)
+    public function __construct(Linkcard $plugin)
     {
         $this->domain = $plugin->name;
 

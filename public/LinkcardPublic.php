@@ -14,69 +14,69 @@ namespace love2hina\wordpress\linkcard;
 class LinkcardPublic
 {
 
-	/**
-	 * プラグイン本体クラス.
-	 *
-	 * @access	protected
-	 * @var     Linkcard	$plugin
-	 */
-	protected readonly object	$plugin;
+    /**
+     * プラグイン本体クラス.
+     *
+     * @access	protected
+     * @var     Linkcard	$plugin
+     */
+    protected readonly Linkcard $plugin;
 
-	public function __construct($plugin)
-	{
-		$this->plugin = $plugin;
+    public function __construct(Linkcard $plugin)
+    {
+        $this->plugin = $plugin;
 
-		$this->plugin->loader->add_action('wp_enqueue_scripts', $this, 'enqueue_styles');
+        $this->plugin->loader->add_action('wp_enqueue_scripts', $this, 'enqueue_styles');
         $this->plugin->loader->add_action('wp_enqueue_scripts', $this, 'enqueue_scripts');
 
-		\add_shortcode('linkcard_new', [$this, 'shortcode_callback']);
-	}
+        \add_shortcode('linkcard_new', [$this, 'shortcode_callback']);
+    }
 
-	/**
-	 * Register the stylesheets for the public-facing side of the site.
-	 */
-	public function enqueue_styles(): void
-	{
+    /**
+     * Register the stylesheets for the public-facing side of the site.
+     */
+    public function enqueue_styles(): void
+    {
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in LinkcardLoader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The LinkcardLoader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
+        /**
+         * This function is provided for demonstration purposes only.
+         *
+         * An instance of this class should be passed to the run() function
+         * defined in LinkcardLoader as all of the hooks are defined
+         * in that particular class.
+         *
+         * The LinkcardLoader will then create the relationship
+         * between the defined hooks and the functions defined in this
+         * class.
+         */
 
-		\wp_enqueue_style($this->plugin->name, plugin_dir_url(__FILE__) . 'css/linkcard-public.css', array(), $this->plugin->version, 'all');
+        \wp_enqueue_style($this->plugin->name, plugin_dir_url(__FILE__) . 'css/linkcard-public.css', array(), $this->plugin->version, 'all');
 
-	}
+    }
 
-	/**
-	 * Register the JavaScript for the public-facing side of the site.
-	 */
-	public function enqueue_scripts(): void
-	{
+    /**
+     * Register the JavaScript for the public-facing side of the site.
+     */
+    public function enqueue_scripts(): void
+    {
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in LinkcardLoader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The LinkcardLoader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
+        /**
+         * This function is provided for demonstration purposes only.
+         *
+         * An instance of this class should be passed to the run() function
+         * defined in LinkcardLoader as all of the hooks are defined
+         * in that particular class.
+         *
+         * The LinkcardLoader will then create the relationship
+         * between the defined hooks and the functions defined in this
+         * class.
+         */
 
-		\wp_enqueue_script( $this->plugin->name, plugin_dir_url(__FILE__) . 'js/linkcard-public.js', array('jquery'), $this->plugin->version, false);
+        \wp_enqueue_script( $this->plugin->name, plugin_dir_url(__FILE__) . 'js/linkcard-public.js', array('jquery'), $this->plugin->version, false);
 
-	}
+    }
 
-	public function shortcode_callback(array $attr, ?string $content): string
+    public function shortcode_callback(array $atts, ?string $content): string
     {
         $args = \shortcode_atts([
             'url' => null,
@@ -93,11 +93,23 @@ class LinkcardPublic
         // キャッシュから取得
         $data = $this->plugin->database->query_cache($args['url']);
         if ($data === null) {
-            // TODO
+            // OGP情報を取得
+            $this->plugin->load_module('includes/OpenGraph.php');
+            $graph = new OpenGraph($args['url']);
+            $data = [
+                'url' => $args['url'],
+                'title' => $graph->title,
+                'description' => $graph->description,
+                'image' => $graph->image,
+                'site' => $graph->site_name
+            ];
+
+            // キャッシュに追加
+            $this->plugin->database->insert_cache($data);
         }
 
         // 補完処理
-        $fn_comp = fn(string $value, string $default) => (\trim($value) == '')? $default : $value;
+        $fn_comp = fn(?string $value, ?string $default) => (\trim($value) == '')? $default : $value;
         $info = [
             'url' => $data['url'],
             'title' => $fn_comp($args['title'], $data['title']),

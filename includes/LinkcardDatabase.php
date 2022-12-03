@@ -19,7 +19,7 @@ class LinkcardDatabase
      * @access  protected
      * @var     Linkcard    $plugin
      */
-    protected readonly object   $plugin;
+    protected readonly Linkcard $plugin;
 
     /**
      * テーブル名.
@@ -29,7 +29,7 @@ class LinkcardDatabase
      */
     protected readonly string   $table_cache;
 
-    public function __construct(object $plugin)
+    public function __construct(Linkcard $plugin)
     {
         global $wpdb;
 
