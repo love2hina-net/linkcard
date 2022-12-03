@@ -42,7 +42,4 @@ $plugin = new Linkcard(
     __FILE__                // このファイル名
 );
 
-\register_activation_hook(__FILE__, [$plugin, 'activate']);
-\register_deactivation_hook(__FILE__, [$plugin, 'deactivate']);
-
 $plugin->run();

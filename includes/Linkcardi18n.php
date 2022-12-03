@@ -39,7 +39,7 @@ class Linkcardi18n
     {
         $this->domain = $plugin->name;
 
-        $plugin->loader->add_action('plugins_loaded', $this, 'load_plugin_textdomain');
+        $plugin->add_action('plugins_loaded', [$this, 'load_plugin_textdomain']);
     }
 
     /**

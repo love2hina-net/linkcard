@@ -34,10 +34,10 @@ class LinkcardAdmin
         $this->menu_slug = $this->plugin->prefix . 'settings';
         $this->option_group = $this->plugin->name;
 
-        $this->plugin->loader->add_action('admin_enqueue_scripts', $this, 'enqueue_styles');
-        $this->plugin->loader->add_action('admin_enqueue_scripts', $this, 'enqueue_scripts');
-        $this->plugin->loader->add_action('admin_init', $this, 'admin_init');
-        $this->plugin->loader->add_action('admin_menu', $this, 'admin_menu');
+        $this->plugin->add_action('admin_enqueue_scripts', [$this, 'enqueue_styles']);
+        $this->plugin->add_action('admin_enqueue_scripts', [$this, 'enqueue_scripts']);
+        $this->plugin->add_action('admin_init', [$this, 'admin_init']);
+        $this->plugin->add_action('admin_menu', [$this, 'admin_menu']);
     }
 
     public function admin_init(): void
@@ -104,21 +104,7 @@ class LinkcardAdmin
      */
     public function enqueue_styles(): void
     {
-
-        /**
-         * This function is provided for demonstration purposes only.
-         *
-         * An instance of this class should be passed to the run() function
-         * defined in LinkcardLoader as all of the hooks are defined
-         * in that particular class.
-         *
-         * The LinkcardLoader will then create the relationship
-         * between the defined hooks and the functions defined in this
-         * class.
-         */
-
-        \wp_enqueue_style($this->plugin->name, plugin_dir_url(__FILE__) . 'css/linkcard-admin.css', array(), $this->plugin->version, 'all');
-
+        $this->plugin->enqueue_style('admin', 'admin/css/linkcard-admin.css');
     }
 
     /**
@@ -126,21 +112,7 @@ class LinkcardAdmin
      */
     public function enqueue_scripts(): void
     {
-
-        /**
-         * This function is provided for demonstration purposes only.
-         *
-         * An instance of this class should be passed to the run() function
-         * defined in LinkcardLoader as all of the hooks are defined
-         * in that particular class.
-         *
-         * The LinkcardLoader will then create the relationship
-         * between the defined hooks and the functions defined in this
-         * class.
-         */
-
-        \wp_enqueue_script($this->plugin->name, plugin_dir_url(__FILE__) . 'js/linkcard-admin.js', array('jquery'), $this->plugin->version, false);
-
+        $this->plugin->enqueue_script('admin', 'admin/js/linkcard-admin.js', ['jquery']);
     }
 
 }

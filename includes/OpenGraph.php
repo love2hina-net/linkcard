@@ -26,10 +26,10 @@ class _HtmlLoader
     /**
      * ドキュメント.
      *
-     * @access  private
+     * @access  protected
      * @var     DOMDocument $document
      */
-    private readonly \DOMDocument   $document;
+    protected readonly \DOMDocument $document;
 
     /**
      * 読み込み時に使用した文字コード.

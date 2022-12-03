@@ -26,10 +26,10 @@ class LinkcardPublic
     {
         $this->plugin = $plugin;
 
-        $this->plugin->loader->add_action('wp_enqueue_scripts', $this, 'enqueue_styles');
-        $this->plugin->loader->add_action('wp_enqueue_scripts', $this, 'enqueue_scripts');
+        $this->plugin->add_action('wp_enqueue_scripts', [$this, 'enqueue_styles']);
+        $this->plugin->add_action('wp_enqueue_scripts', [$this, 'enqueue_scripts']);
 
-        \add_shortcode('linkcard_new', [$this, 'shortcode_callback']);
+        \add_shortcode('linkcard', [$this, 'shortcode_callback']);
     }
 
     /**
@@ -37,21 +37,7 @@ class LinkcardPublic
      */
     public function enqueue_styles(): void
     {
-
-        /**
-         * This function is provided for demonstration purposes only.
-         *
-         * An instance of this class should be passed to the run() function
-         * defined in LinkcardLoader as all of the hooks are defined
-         * in that particular class.
-         *
-         * The LinkcardLoader will then create the relationship
-         * between the defined hooks and the functions defined in this
-         * class.
-         */
-
-        \wp_enqueue_style($this->plugin->name, plugin_dir_url(__FILE__) . 'css/linkcard-public.css', array(), $this->plugin->version, 'all');
-
+        $this->plugin->enqueue_style('public', 'public/css/linkcard-public.css');
     }
 
     /**
@@ -59,21 +45,7 @@ class LinkcardPublic
      */
     public function enqueue_scripts(): void
     {
-
-        /**
-         * This function is provided for demonstration purposes only.
-         *
-         * An instance of this class should be passed to the run() function
-         * defined in LinkcardLoader as all of the hooks are defined
-         * in that particular class.
-         *
-         * The LinkcardLoader will then create the relationship
-         * between the defined hooks and the functions defined in this
-         * class.
-         */
-
-        \wp_enqueue_script( $this->plugin->name, plugin_dir_url(__FILE__) . 'js/linkcard-public.js', array('jquery'), $this->plugin->version, false);
-
+        $this->plugin->enqueue_script('public', 'public/js/linkcard-public.js', ['jquery']);
     }
 
     public function shortcode_callback(array $atts, ?string $content): string
@@ -109,7 +81,7 @@ class LinkcardPublic
         }
 
         // 補完処理
-        $fn_comp = fn(?string $value, ?string $default) => (\trim($value) == '')? $default : $value;
+        $fn_comp = fn(?string $value, ?string $default) => ($value === null || \trim($value) == '')? $default : $value;
         $info = [
             'url' => $data['url'],
             'title' => $fn_comp($args['title'], $data['title']),
