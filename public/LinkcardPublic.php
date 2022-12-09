@@ -85,7 +85,7 @@ class LinkcardPublic
         $info = [
             'url' => $data['url'],
             'title' => $fn_comp($args['title'], $data['title']),
-            'description' => \wp_trim_words($fn_comp($args['excerpt'], $data['description']), 60),
+            'description' => \wp_trim_words($fn_comp($args['excerpt'], $data['description']), $this->plugin->config->description_limit_length),
             'image' => $data['image'],
             'site' => $data['site']
         ];

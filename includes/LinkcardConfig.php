@@ -13,16 +13,36 @@ class LinkcardConfig
     /** 設定値のスキーマ */
     protected const OPTIONS_SCHEMA = [
         'schema_id' => [
-            'title' => '',
             'type' => 'hidden',
             'default' => null
         ],
         'cache_lifetime' => [
-            'title' => 'Cache Lifetime',
             'type' => 'number',
             'default' => 20
+        ],
+        'description_limit_length' => [
+            'type' => 'number',
+            'default' => 60
         ]
     ];
+
+    private function get_descriptions(): array
+    {
+        return [
+            'schema_id' => [
+                'title' => __(''),
+                'description' => __('')
+            ],
+            'cache_lifetime' => [
+                'title' => __('Cache Lifetime'),
+                'description' => __('The metadata cache expiration period in days.')
+            ],
+            'description_limit_length' => [
+                'title' => __('Description Limit Length'),
+                'description' => __('The limitation number of characters in description.')
+            ]
+        ];
+    }
 
     /** プラグイン本体クラス */
     protected readonly Linkcard $plugin;
@@ -116,10 +136,12 @@ class LinkcardConfig
             'field_callback_args' => array()
         ]);
 
+        $desc = $this->get_descriptions();
+
         \register_setting($args['option_group'], $this->option_key);
         \add_settings_section(
             'general_section',
-            __('The Matrix has you.'),
+            __('General Settings'),
             $args['section_callback_func'],
             $args['option_group'],
             $args['section_callback_args']
@@ -127,11 +149,11 @@ class LinkcardConfig
         foreach (self::OPTIONS_SCHEMA as $key => $schema) {
             \add_settings_field(
                 $key,
-                __($schema['title']),
+                $desc[$key]['title'],
                 $args['field_callback_func'],
                 $args['option_group'],
                 'general_section',
-                \array_merge($schema, $args['field_callback_args'], [
+                \array_merge($schema, $desc[$key], $args['field_callback_args'], [
                     'id' => $key,
                     'name' => "{$this->option_key}[{$key}]",
                     'value' => $this->values[$key],
@@ -151,6 +173,7 @@ class LinkcardConfig
                 break;
             case 'number':
                 echo "<input id=\"{$args['id']}\" name=\"{$args['name']}\" type=\"number\" value=\"{$args['value']}\" />\n";
+                echo "<p class=\"description\">{$args['description']}</p>\n";
                 break;
         }
     }

@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-11-26T08:48:50+00:00\n"
+"POT-Creation-Date: 2022-12-09T12:04:14+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 
@@ -29,18 +29,30 @@ msgstr ""
 msgid "https://www.love2hina.net/"
 msgstr ""
 
-#: admin/LinkcardAdmin.php:41
+#: admin/LinkcardAdmin.php:53
+msgid "Follow the white rabbit."
+msgstr ""
+
+#: admin/LinkcardAdmin.php:58
 msgid "LinkCard Settings"
 msgstr ""
 
-#: admin/LinkcardAdmin.php:64
-msgid "Settings Saved"
+#: includes/LinkcardConfig.php:37
+msgid "Cache Lifetime"
 msgstr ""
 
-#: includes/LinkcardConfig.php:122
-msgid "The Matrix has you."
+#: includes/LinkcardConfig.php:38
+msgid "The metadata cache expiration period in days."
 msgstr ""
 
-#: includes/LinkcardConfig.php:141
-msgid "Follow the white rabbit."
+#: includes/LinkcardConfig.php:41
+msgid "Description Limit Length"
+msgstr ""
+
+#: includes/LinkcardConfig.php:42
+msgid "The limitation number of characters in description."
+msgstr ""
+
+#: includes/LinkcardConfig.php:144
+msgid "General Settings"
 msgstr ""
